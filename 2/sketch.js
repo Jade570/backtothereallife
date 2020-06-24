@@ -5,6 +5,8 @@ let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
 let startbutton;
 
 
+
+
 function bgmusic(){
   //beat
   setInterval(function(){Pd.send('beat', [0]);}, 8000*0.5);
@@ -189,7 +191,8 @@ function movementcontrol(){
 }
 
 function preload(){
-
+  snare = loadSound("../assets/snare.wav");
+  kick = loadSound("../assets/kick.wav");
 }
 
 function setup() {
@@ -214,9 +217,22 @@ function setup() {
     window.location.replace("../3/index.html");
   });
 
+  Pd.receive('snare', function(args){
+    if (args == "bang"){
+      snare.play();
+    }
+  });
+  Pd.receive('kick', function(args){
+    if (args == "bang"){
+      kick.play();
+    }
+  });
+
 }
 
 function draw() {
+
+
   orbitControl();
 
   rotateX(HALF_PI);
