@@ -20,15 +20,6 @@ class Robot{
     this.rtx=0, this.rty=0, this.rtz=0;
     this.rlx=-(HALF_PI/4), this.rly=0, this.rlz=0;
 
-    this.leftarm=createVector(this.lax,this.lay,this.laz);
-    this.leftforearm=createVector(this.lfax, this.lfay, this.lfaz);
-    this.rightarm=createVector(this.rax, this.ray, this.raz);
-    this.rightforearm=createVector(this.rfax, this.rfay, this.rfaz);
-    this.leftleg=createVector(this.llx, this.lly, this.llz);
-    this.leftthigh=createVector(this.ltx,this.lty,this.ltz);
-    this.rightleg=createVector(this.rlx,this.rly,this.rlz);
-    this.rightthigh=createVector(this.rtx,this.rty,this.rtz);
-
     //tokens
     /*
       from, to tokens:
@@ -65,6 +56,19 @@ class Robot{
       y:{from:false, to:false},
       state: "static"
     }
+
+    this.lal = 0;
+    this.lar = 0;
+    this.rar = 0;
+    this.ral = 0;
+    this.hu = 0;
+    this.hd = 0;
+    this.cu = 0;
+    this.cd = 0;
+    this.ld = 0;
+    this.lu = 0;
+    this.rlu = 0;
+    this.rld = 0;
   }
 
   //rendering part
@@ -96,7 +100,7 @@ class Robot{
           break;
 
           case 1:
-
+            sphere(this.size*30, 12, 12);
           break;
 
           case 2:
@@ -135,14 +139,14 @@ class Robot{
           break;
 
           case 1:
-          break;
-
-          case 2:
-            //sphere(this.size*28, 12, 12);
             push();
             rotateZ(HALF_PI);
             cylinder(this.size*15,this.size*35);
             pop();
+          break;
+
+          case 2:
+            sphere(this.size*27, 12, 12);
           break;
         }
         pop();
@@ -177,6 +181,7 @@ class Robot{
           break;
 
           case 1:
+            sphere(this.size*30, 12, 12);
           break;
 
           case 2:
@@ -215,14 +220,14 @@ class Robot{
           break;
 
           case 1:
+            push();
+            rotateZ(HALF_PI);
+            cylinder(this.size*20,this.size*35);
+            pop();
           break;
 
           case 2:
-          //  sphere(this.size*40, 12, 12);
-          push();
-          rotateZ(HALF_PI);
-          cylinder(this.size*20,this.size*35);
-          pop();
+            sphere(this.size*30, 12, 12);
           break;
         }
         pop();
@@ -266,6 +271,21 @@ class Robot{
       break;
 
       case 1:
+        noStroke();
+        box(this.size*100,this.size*100,this.size*80);
+
+        push();
+        rotateX(HALF_PI);
+        translate(0,-50*this.size, 0);
+        pop();
+
+        //eyes
+        push();
+        translate(0,-45*this.size,8*this.size);
+        specularMaterial((hue(this.color)-132+360)%360, 100,100,0.9);
+        fill((hue(this.color)-132+360)%360, 90,100, 0.9);
+        sphere(this.size*30,10,10);
+        pop();
       break;
 
       case 2: //destructoid
@@ -363,6 +383,8 @@ class Robot{
       break;
 
       case 1:
+      noStroke();
+      box(150*this.size,150*this.size,200*this.size);
       break;
 
       case 2:
@@ -425,6 +447,44 @@ class Robot{
       break;
 
       case 1:
+        push();
+        translate(0,0,-200*this.size);
+        this.head();
+        push();
+        translate(0,0,140*this.size);
+        this.body();
+        pop();
+        pop();
+
+        translate(0,0,-130*this.size);
+        push();
+        translate(-100*this.size,0,0);
+        this.limb("left", "arm");
+        translate(0,0,50*this.size);
+        this.limb("left", "forearm");
+        pop();
+
+        push();
+        translate(100*this.size,0,0);
+        this.limb("right", "arm");
+        translate(0,0,50*this.size);
+        this.limb("right", "forearm");
+        pop();
+
+        push();
+        translate(-40*this.size,0,170*this.size);
+        this.limb("left", "thigh");
+        translate(0,0,50*this.size);
+        this.limb("left", "leg");
+        pop();
+
+        push();
+        translate(40*this.size,0,170*this.size);
+        this.limb("right", "thigh");
+        translate(0,0,50*this.size);
+        this.limb("right", "leg");
+        pop();
+      pop();
       break;
 
       case 2: //destructoid
@@ -441,28 +501,28 @@ class Robot{
         push();
         translate(-100*this.size,0,0);
         this.limb("left", "arm");
-        translate(0,0,55*this.size);
+        translate(0,0,50*this.size);
         this.limb("left", "forearm");
         pop();
 
         push();
         translate(100*this.size,0,0);
         this.limb("right", "arm");
-        translate(0,0,55*this.size);
+        translate(0,0,50*this.size);
         this.limb("right", "forearm");
         pop();
 
         push();
         translate(-40*this.size,0,170*this.size);
         this.limb("left", "thigh");
-        translate(0,0,40*this.size);
+        translate(0,0,50*this.size);
         this.limb("left", "leg");
         pop();
 
         push();
         translate(40*this.size,0,170*this.size);
         this.limb("right", "thigh");
-        translate(0,0,40*this.size);
+        translate(0,0,50*this.size);
         this.limb("right", "leg");
         pop();
       pop();
@@ -477,12 +537,14 @@ class Robot{
       this.leftarm.y.to = true;
       this.lay-=radians(4);
       this.lfax -= (HALF_PI/3)/42.5;
+      this.lal = 1;
       if(this.lay <= -radians(170)){ //stop movement
         this.leftarm.state = "static"; // change state
         this.leftarm.y.from = true;
         this.leftarm.y.to = true;
         this.lay = -radians(170);
         this.lfax = 0;
+        this.lal = 0;
       }
     }
   }
@@ -492,12 +554,14 @@ class Robot{
       this.leftarm.y.to = false;
       this.lay+=radians(4);
       this.lfax += (HALF_PI/3)/42.5;
+      this.lar = 1;
       if(this.lay >= 0){ //stop movement
         this.leftarm.y.from = false;
         this.leftarm.y.to = false;
         this.leftarm.state = "static"; //change state
         this.lay = 0;
         this.lfax = HALF_PI/3;
+        this.lar = 0;
       }
     }
   }
@@ -507,12 +571,14 @@ class Robot{
       this.rightarm.y.to = true;
       this.ray+=radians(4);
       this.rfax -= (HALF_PI/3)/42.5;
+      this.rar = 1;
       if(this.ray >= radians(170)){ //stop movement
         this.rightarm.state = "static"; // change state
         this.rightarm.y.from = true;
         this.rightarm.y.to = true;
         this.ray = radians(170);
         this.rfax = 0;
+        this.rar = 0;
       }
     }
   }
@@ -522,12 +588,14 @@ class Robot{
       this.rightarm.y.to = false;
       this.ray-=radians(4);
       this.rfax += (HALF_PI/3)/42.5;
+      this.ral = 1;
       if(this.ray <= 0){ //stop movement
         this.rightarm.y.from = false;
         this.rightarm.y.to = false;
         this.rightarm.state = "static"; //change state
         this.ray = 0;
         this.rfax = HALF_PI/3;
+        this.ral = 0;
       }
     }
   }
@@ -541,6 +609,7 @@ class Robot{
       this.rax += radians(4);
       this.lfax -= (HALF_PI/3)/42.5;
       this.rfax -= (HALF_PI/3)/42.5;
+      this.hu = 1;
       if(this.lax >= radians(170)){
         this.leftarm.state="static";
         this.rightarm.state="static";
@@ -552,6 +621,7 @@ class Robot{
         this.rax = radians(170);
         this.lfax = 0;
         this.rfax = 0;
+        this.hu = 0;
       }
     }
   }
@@ -565,6 +635,7 @@ class Robot{
       this.rax -= radians(4);
       this.lfax += (HALF_PI/3)/42.5;
       this.rfax += (HALF_PI/3)/42.5;
+      this.hd = 1;
       if(this.lax <= 0){
         this.leftarm.state="static";
         this.rightarm.state="static";
@@ -576,6 +647,7 @@ class Robot{
         this.rax = 0;
         this.lfax = HALF_PI/3;
         this.rfax = HALF_PI/3;
+        this.hd = 0;
       }
     }
   }
@@ -591,6 +663,7 @@ class Robot{
       this.ray -= radians(0.25);
       this.lfay += radians(1);
       this.rfay -= radians(1);
+      this.cu = 1;
 
       if(this.lax >= radians(170/2)){
         this.leftarm.state="static";
@@ -601,6 +674,7 @@ class Robot{
         this.rightarm.x.to = true;
         this.lax = radians(170/2);
         this.rax = radians(170/2);
+        this.cu = 0;
       }
     }
   }
@@ -616,6 +690,7 @@ class Robot{
       this.ray += radians(0.25);
       this.lfay -= radians(1);
       this.rfay += radians(1);
+      this.cd = 1;
 
       if(this.lax <= 0){
         this.leftarm.state="static";
@@ -626,6 +701,7 @@ class Robot{
         this.rightarm.x.to = false;
         this.lax = 0;
         this.rax = 0;
+        this.cd = 0;
       }
     }
   }
@@ -641,6 +717,7 @@ class Robot{
       this.rlx -= radians(1);
       this.zaxis += 0.5;
       this.yaxis += 1;
+      this.ld = 1;
 
       if (this.ltx >= radians(170/4)){
         this.leftleg.state = "static";
@@ -651,6 +728,7 @@ class Robot{
         this.rightleg.x.to = true;
         this.ltx = radians(170/4);
         this.rtx = radians(170/4);
+        this.ld = 0;
       }
     }
   }
@@ -666,6 +744,7 @@ class Robot{
       this.rlx += radians(1);
       this.zaxis -= 0.5;
       this.yaxis -= 1;
+      this.lu = 1;
 
       if (this.ltx <= 0){
         this.leftleg.state = "static";
@@ -676,6 +755,7 @@ class Robot{
         this.rightleg.x.to = false;
         this.ltx = 0;
         this.rtx = 0;
+        this.lu = 0;
       }
     }
   }
@@ -685,11 +765,13 @@ class Robot{
       this.leftleg.x.to = true;
       this.ltx += radians(4/2.5);
       this.llx -= radians(1);
+      this.llu = 1;
       if (this.ltx >= radians(170/2.5)){
         this.leftleg.state = "static";
         this.leftleg.x.from = true;
         this.leftleg.x.to = true;
         this.ltx = radians(170/2.5);
+        this.llu = 0;
       }
     }
   }
@@ -699,11 +781,13 @@ class Robot{
       this.leftleg.x.to = false;
       this.ltx -= radians(4/2.5);
       this.llx += radians(1);
+      this.lld = 1;
       if (this.ltx <= 0){
         this.leftleg.state = "static";
         this.leftleg.x.from = false;
         this.leftleg.x.to = false;
-        this.ltx =0;
+        this.ltx = 0;
+        this.lld = 0;
       }
     }
   }
@@ -713,11 +797,13 @@ class Robot{
       this.rightleg.x.to = true;
       this.rtx += radians(4/2.5);
       this.rlx -= radians(1);
+      this.rlu = 1;
       if (this.rtx >= radians(170/2.5)){
         this.rightleg.state = "static";
         this.rightleg.x.from = true;
         this.rightleg.x.to = true;
         this.rtx = radians(170/2.5);
+        this.rlu = 0;
       }
     }
 
@@ -728,29 +814,31 @@ class Robot{
       this.rightleg.x.to = false;
       this.rtx -= radians(4/2.5);
       this.rlx += radians(1);
+      this.rld = 1;
       if (this.rtx <= 0){
         this.rightleg.state = "static";
         this.rightleg.x.from = false;
         this.rightleg.x.to = false;
-        this.rtx =0;
+        this.rtx = 0;
+        this.rld = 0;
       }
     }
   }
   movements(){
-    user.leftarmleft();
-    user.leftarmright();
-    user.rightarmright();
-    user.rightarmleft();
-    user.hurrayup();
-    user.hurraydown();
-    user.clapup();
-    user.clapdown();
-    user.legsdown();
-    user.legsup();
-    user.leftlegup();
-    user.leftlegdown();
-    user.rightlegup();
-    user.rightlegdown();
+    this.leftarmleft();
+    this.leftarmright();
+    this.rightarmright();
+    this.rightarmleft();
+    this.hurrayup();
+    this.hurraydown();
+    this.clapup();
+    this.clapdown();
+    this.legsdown();
+    this.legsup();
+    this.leftlegup();
+    this.leftlegdown();
+    this.rightlegup();
+    this.rightlegdown();
   }
 
 

@@ -2,6 +2,8 @@ let crash, openhh, hihat, snare, kick;
 let user;
 let usercol;
 let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
+let startbutton;
+
 
 function bgmusic(){
   //beat
@@ -94,20 +96,24 @@ function movementcontrol(){
     if ((user.leftarm.y.from==false && user.leftarm.y.to==false)
       ||(user.leftarm.y.from==true && user.leftarm.y.to==false)){
         user.leftarm.state = "setleft";
+        Pd.send('setleftarm', ['bang']);
     }
     else if ((user.leftarm.y.from==true && user.leftarm.y.to==true)
       ||(user.leftarm.y.from==false && user.leftarm.y.to==true)){
         user.leftarm.state = "resetleft";
+        Pd.send('resetleftarm', ['bang']);
     }
   }
   else if (rightkey == 1){
     if ((user.rightarm.y.from==false && user.rightarm.y.to==false)
       ||(user.rightarm.y.from==true && user.rightarm.y.to==false)){
         user.rightarm.state = "setright";
+        Pd.send('setrightarm', ['bang']);
     }
     else if ((user.rightarm.y.from==true && user.rightarm.y.to==true)
       ||(user.rightarm.y.from==false && user.rightarm.y.to==true)){
         user.rightarm.state = "resetright";
+        Pd.send('resetrightarm', ['bang']);
     }
   }
   else if (upkey == 1){
@@ -115,11 +121,13 @@ function movementcontrol(){
       ||(user.rightarm.x.from==true && user.rightarm.x.to==false)){
         user.leftarm.state = "sethurray"
         user.rightarm.state = "sethurray";
+        Pd.send('sethurray', ['bang']);
     }
     else if ((user.rightarm.x.from==true && user.rightarm.x.to==true)
       ||(user.rightarm.x.from==false && user.rightarm.x.to==true)){
         user.leftarm.state="resethurray";
         user.rightarm.state = "resethurray";
+        Pd.send('resethurray', ['bang']);
     }
   }
 
@@ -128,11 +136,13 @@ function movementcontrol(){
       ||(user.rightarm.x.from==true && user.rightarm.x.to==false)){
         user.leftarm.state = "setclap"
         user.rightarm.state = "setclap";
+        Pd.send('setclap', ['bang']);
     }
     else if ((user.rightarm.x.from==true && user.rightarm.x.to==true)
       ||(user.rightarm.x.from==false && user.rightarm.x.to==true)){
         user.leftarm.state="resetclap";
         user.rightarm.state = "resetclap";
+        Pd.send('resetclap', ['bang']);
     }
   }
 
@@ -141,11 +151,13 @@ function movementcontrol(){
       ||(user.rightleg.x.from==true && user.rightleg.x.to==false)){
         user.leftleg.state = "setlegs"
         user.rightleg.state = "setlegs";
+        Pd.send('setlegs', ['bang']);
     }
     else if ((user.rightleg.x.from==true && user.rightleg.x.to==true)
       ||(user.rightleg.x.from==false && user.rightleg.x.to==true)){
         user.leftleg.state="resetlegs";
         user.rightleg.state = "resetlegs";
+        Pd.send('resetlegs', ['bang']);
     }
   }
 
@@ -153,10 +165,12 @@ function movementcontrol(){
     if ((user.leftleg.x.from==false && user.leftleg.x.to==false)
       ||(user.leftleg.x.from==true && user.leftleg.x.to==false)){
         user.leftleg.state = "setleft";
+        Pd.send('setleftleg', ['bang']);
     }
     else if ((user.leftleg.x.from==true && user.leftleg.x.to==true)
       ||(user.leftleg.x.from==false && user.leftleg.x.to==true)){
         user.leftleg.state="resetleft";
+        Pd.send('resetleftleg', ['bang']);
     }
   }
 
@@ -164,24 +178,26 @@ function movementcontrol(){
     if ((user.rightleg.x.from==false && user.rightleg.x.to==false)
       ||(user.rightleg.x.from==true && user.rightleg.x.to==false)){
         user.rightleg.state = "setright";
+        Pd.send('setrightleg', ['bang']);
     }
     else if ((user.rightleg.x.from==true && user.rightleg.x.to==true)
       ||(user.rightleg.x.from==false && user.rightleg.x.to==true)){
         user.rightleg.state="resetright";
+        Pd.send('resetrightleg', ['bang']);
     }
   }
 }
-
-
 
 function preload(){
 
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL)
+  createCanvas(windowWidth, windowHeight, WEBGL);
+
   //bgmusic();
   colorMode(HSB, 360, 100, 100);
+
   usercol = color(0,100,100);
   user = new Robot(1,0,usercol,0,0,0,0,0,0);
   leftkey = 0;
@@ -191,6 +207,13 @@ function setup() {
   spacekey = 0;
   dkey = 0;
   fkey = 0;
+
+  startbutton = createButton('start');
+  startbutton.position(windowWidth-200, windowHeight-200);
+  startbutton.mousePressed(function(){
+    window.location.replace("../3/index.html");
+  });
+
 }
 
 function draw() {
@@ -200,23 +223,26 @@ function draw() {
   rotateZ(-PI);
   rotateY(PI);
 
-
   colorMode(RGB, 255,255,255);
   lights();
 
   background(0);
 
   colorMode(HSB, 360, 100, 100);
+
+  push();
+  translate(0,0,250);
+  noStroke();
+  plane(10000);
+  pop();
+
   user.render();
   // light set-up
   ambientLight(150, 150, 150);
 
-
 // movement controls
 toggleon();
 movementcontrol();
-
-
 //robot movements
 user.movements();
 }
@@ -254,8 +280,6 @@ function keyReleased() {
       break;
     }
 }
-
-
 function windowResized(){
   resizeCanvas(windowWidth, windowHeight, WEBGL);
 }
