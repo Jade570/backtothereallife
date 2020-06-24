@@ -1,333 +1,248 @@
-const WORLD_SIZE = 500;
-const GRID_SIZE = 30;
-let firstcam, orthocam, thirdcam;
-let firsttoggle, thirdtoggle;
+let crash, openhh, hihat, snare, kick;
+let user, bot, drone;
+let usercol, botcol, dronecol;
+let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
+let nextbutton, replaybutton;
 
-let t0;
-let mov, theta;
-let cam_x1, cam_y1, cam_z1;
-let cam_x3, cam_y3, cam_z3;
-let cam_cx1, cam_cy1, cam_cz1;
-let cam_cx3, cam_cy3, cam_cz3;
-let cam_dx1, cam_dy1, cam_dz1;
-let cam_dx3, cam_dy3, cam_dz3;
-let magenta, indigo, yellow, violet;
-let jump_toggle, highest;;
-let pan,tilt;
-let forward, back, left, right;
-let Bldgs = [];
-let bldg_i = 0;
+function toggleon(){
+  if (keyIsPressed){
+    switch (keyCode){
+      case LEFT_ARROW:
+        leftkey+=1;
+      break;
 
-let chordtoggle;
+      case RIGHT_ARROW:
+        rightkey+=1;
+      break;
 
+      case UP_ARROW:
+        upkey+=1;
+      break;
 
+      case DOWN_ARROW:
+        downkey+=1;
+      break;
+    }
+    switch (key){
+      case ' ':
+        spacekey += 1;
+      break;
 
-function mouseDragged(){
-  if(thirdtoggle){
-      cam_dx3 += radians(movedX);
-      cam_dz3 += radians(movedY);
+      case 'd':
+        dkey += 1;
+      break;
+
+      case 'f':
+        fkey += 1;
+      break;
+    }
   }
 }
+function movementcontrol(){
+  if (leftkey == 1){
+    if ((user.leftarm.y.from==false && user.leftarm.y.to==false)
+      ||(user.leftarm.y.from==true && user.leftarm.y.to==false)){
+        user.leftarm.state = "setleft";
+        Pd.send('setleftarm', ['bang']);
+    }
+    else if ((user.leftarm.y.from==true && user.leftarm.y.to==true)
+      ||(user.leftarm.y.from==false && user.leftarm.y.to==true)){
+        user.leftarm.state = "resetleft";
+        Pd.send('resetleftarm', ['bang']);
+    }
+  }
+  else if (rightkey == 1){
+    if ((user.rightarm.y.from==false && user.rightarm.y.to==false)
+      ||(user.rightarm.y.from==true && user.rightarm.y.to==false)){
+        user.rightarm.state = "setright";
+        Pd.send('setrightarm', ['bang']);
+    }
+    else if ((user.rightarm.y.from==true && user.rightarm.y.to==true)
+      ||(user.rightarm.y.from==false && user.rightarm.y.to==true)){
+        user.rightarm.state = "resetright";
+        Pd.send('resetrightarm', ['bang']);
+    }
+  }
+  else if (upkey == 1){
+    if ((user.rightarm.x.from==false && user.rightarm.x.to==false)
+      ||(user.rightarm.x.from==true && user.rightarm.x.to==false)){
+        user.leftarm.state = "sethurray"
+        user.rightarm.state = "sethurray";
+        Pd.send('sethurray', ['bang']);
+    }
+    else if ((user.rightarm.x.from==true && user.rightarm.x.to==true)
+      ||(user.rightarm.x.from==false && user.rightarm.x.to==true)){
+        user.leftarm.state="resethurray";
+        user.rightarm.state = "resethurray";
+        Pd.send('resethurray', ['bang']);
+    }
+  }
 
+  else if (downkey == 1){
+    if ((user.rightarm.x.from==false && user.rightarm.x.to==false)
+      ||(user.rightarm.x.from==true && user.rightarm.x.to==false)){
+        user.leftarm.state = "setclap"
+        user.rightarm.state = "setclap";
+        Pd.send('setclap', ['bang']);
+    }
+    else if ((user.rightarm.x.from==true && user.rightarm.x.to==true)
+      ||(user.rightarm.x.from==false && user.rightarm.x.to==true)){
+        user.leftarm.state="resetclap";
+        user.rightarm.state = "resetclap";
+        Pd.send('resetclap', ['bang']);
+    }
+  }
+
+  else if (spacekey == 1){
+    if ((user.rightleg.x.from==false && user.rightleg.x.to==false)
+      ||(user.rightleg.x.from==true && user.rightleg.x.to==false)){
+        user.leftleg.state = "setlegs"
+        user.rightleg.state = "setlegs";
+        Pd.send('setlegs', ['bang']);
+    }
+    else if ((user.rightleg.x.from==true && user.rightleg.x.to==true)
+      ||(user.rightleg.x.from==false && user.rightleg.x.to==true)){
+        user.leftleg.state="resetlegs";
+        user.rightleg.state = "resetlegs";
+        Pd.send('resetlegs', ['bang']);
+    }
+  }
+
+  else if (dkey == 1){
+    if ((user.leftleg.x.from==false && user.leftleg.x.to==false)
+      ||(user.leftleg.x.from==true && user.leftleg.x.to==false)){
+        user.leftleg.state = "setleft";
+        Pd.send('setleftleg', ['bang']);
+    }
+    else if ((user.leftleg.x.from==true && user.leftleg.x.to==true)
+      ||(user.leftleg.x.from==false && user.leftleg.x.to==true)){
+        user.leftleg.state="resetleft";
+        Pd.send('resetleftleg', ['bang']);
+    }
+  }
+
+  else if (fkey == 1){
+    if ((user.rightleg.x.from==false && user.rightleg.x.to==false)
+      ||(user.rightleg.x.from==true && user.rightleg.x.to==false)){
+        user.rightleg.state = "setright";
+        Pd.send('setrightleg', ['bang']);
+    }
+    else if ((user.rightleg.x.from==true && user.rightleg.x.to==true)
+      ||(user.rightleg.x.from==false && user.rightleg.x.to==true)){
+        user.rightleg.state="resetright";
+        Pd.send('resetrightleg', ['bang']);
+    }
+  }
+}
+function preload(){
+  snare = loadSound("../assets/snare.wav");
+  kick = loadSound("../assets/kick.wav");
+}
 
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL)
+  createCanvas(windowWidth, windowHeight, WEBGL);
+  colorMode(HSB, 360, 100, 100);
 
+  usercol = color(0,100,100);
+  botcol = color(10,100,70);
+  dronecol = color(146,77,29);
 
-  setInterval(function(){Pd.send('beat', [0]);}, 8000);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [1]);}, 8000);
-  },1000);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [2]);}, 8000);
-  },2000);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [3]);}, 8000);
-  },3500);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [4]);}, 8000);
-  },4000);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [5]);}, 8000);
-  },5000);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [6]);}, 8000);
-  },6000);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [7]);}, 8000);
-  },7000);
+  user = new Robot(0.5,0,usercol,100,0,0,0,0,0);
+  bot = new Robot(0.5,1,botcol,-100,0,0,0,0,0);
+  drone = new Drone(0.5, dronecol, -width/3, 100, -(height/2.5), -radians(60),0,radians(30));
+  leftkey = 0;
+  rightkey = 0;
+  downkey = 0;
+  upkey = 0;
+  spacekey = 0;
+  dkey = 0;
+  fkey = 0;
 
- setInterval(function(){
-      Pd.send('d', [0]); chordtoggle = 0;
-      if(Bldgs[bldg_i-1].h <= GRID_SIZE*2){
-          Pd.send('melody', [74]);
-      }
-      else if(Bldgs[bldg_i-1].h <= GRID_SIZE*8){
-          Pd.send('melody', [77]);
-      }
-      else{
-        Pd.send('melody', [81]);
-      }
-    }, 8000);
+  replaybutton = createButton('replay');
+  replaybutton.position(windowWidth/2-75, windowHeight-200);
+  replaybutton.mousePressed(function(){
+    window.location.replace("../3/index.html");
+  });
+  replaybutton.hide();
 
-  setTimeout(function(){setInterval(function(){
-      Pd.send('d', [1]); chordtoggle = 1;
-      if(Bldgs[bldg_i-1].h <= GRID_SIZE*2){
-          Pd.send('melody', [74]);
-      }
-      else if(Bldgs[bldg_i-1].h <= GRID_SIZE*8){
-          Pd.send('melody', [77]);
-      }
-      else{
-        Pd.send('melody', [83]);
-      }
-    }, 8000);}, 2000);
-  setTimeout(function(){setInterval(function(){
-      Pd.send('d', [2]); chordtoggle = 2;
-      if(Bldgs[bldg_i-1].h <= GRID_SIZE*2){
-          Pd.send('melody', [72]);
-      }
-      else if(Bldgs[bldg_i-1].h <= GRID_SIZE*8){
-          Pd.send('melody', [76]);
-      }
-      else{
-        Pd.send('melody', [86]);
-      }
-    }, 8000);}, 4000);
-  setTimeout(function(){setInterval(function(){
-      Pd.send('d', [3]); chordtoggle = 3;
-      if(Bldgs[bldg_i-1].h <= GRID_SIZE*2){
-          Pd.send('melody', [76]);
-      }
-      else if(Bldgs[bldg_i-1].h <= GRID_SIZE*8){
-          Pd.send('melody', [79]);
-      }
-      else{
-        Pd.send('melody', [84]);
-      }
-    }, 8000);}, 6000);
-
-
-    setInterval(function(){
-      Pd.send('vol', [0]);
-    }, 1000);
-
-    setTimeout(function(){
-      setInterval(function(){
-        Pd.send('vol', [1]);
-      }, 1000);
-    }, 500);
-
-
-
-  // init camera
-  cam_x1 = 0;
-  cam_y1 = 100;
-  cam_z1 = GRID_SIZE;
-  cam_dx1 = 0;
-  cam_dy1 = -1;
-  cam_dz1 = 0;
-
-  cam_x3 = windowHeight*0.75;
-  cam_y3 = windowHeight/2;
-  cam_z3 = windowHeight/4;
-  cam_dx3 = 0;
-  cam_dz3 = 1;
-
-  tilt = 0;
-  pan = 0;
-  mov = 0;
-  highest = false;
-  firsttoggle = true;
-  thirdtoggle = false;
-
-  jump_toggle = false;
-  forward = false;
-  back = false;
-  left = false;
-  right = false;
-  updateCamCenter();
-
-  firstcam = createCamera();
-  firstcam.camera(cam_x1, cam_y1, cam_z1,cam_cx1, cam_cy1, cam_cz1,0,0,-1);
-
-
-  thirdcam = createCamera();
-  thirdcam.camera(cam_x3*cos(cam_dx3), cam_x3*sin(cam_dx3), cam_z3*(cam_dz3), 0, -1, 0,0,0,-1);
-
-  orthocam = createCamera();
-  orthocam.setPosition(0, 0, windowHeight);
-  orthocam.lookAt(0, 0, 0);
-  orthocam.ortho();
-
-  violet = color(80, 18, 110 , 200); // violet
-  indigo = color(19, 0, 163, 200); // indigo
-  yellow = color(255, 208, 0, 200); // yellow
-  magenta = color(237, 0, 158, 200); //magenta
-
+  Pd.receive('snare', function(args){
+    if (args == "bang"){
+      snare.play();
+    }
+  });
+  Pd.receive('kick', function(args){
+    if (args == "bang"){
+      kick.play();
+    }
+  });
 }
 
 function draw() {
+  orbitControl();
+
+  rotateX(HALF_PI);
+  rotateZ(-PI);
+  rotateY(PI);
+
+  colorMode(RGB, 255,255,255);
+  lights();
+
   background(0);
 
+  colorMode(HSB, 360, 100, 100);
 
+  push();
+  translate(0,0,250);
+  noStroke();
+  plane(10000);
+  pop();
+
+  user.render();
+  bot.render();
+  drone.render();
   // light set-up
   ambientLight(150, 150, 150);
 
-
-  firstcam.camera(cam_x1, cam_y1, cam_z1,cam_cx1, cam_cy1, cam_cz1,0,0,-1);
-  thirdcam.camera(cam_x3*cos(cam_dx3), cam_x3*sin(cam_dx3), cam_z3*(cam_dz3), 0, -1, 0,0,0,-1);
-
-  if (firsttoggle == true) {
-    setCamera(firstcam);
-
-    pan += movedX/64;
-    tilt -= movedY/128;
-    updateCamCenter();
-
-    handleUserInput();
-  }
-    else if (thirdtoggle == true) {
-    setCamera(thirdcam);
-  } else {
-    setCamera(orthocam);
-  }
-
-
-  //world plane set-up
-  noStroke();
-
-
-  strokeWeight(0.5);
-
-  switch(chordtoggle){
-    case 0:
-    stroke(255, 94, 223);
-
-    break;
-
-    case 1:
-    stroke(255, 248, 110);
-    break;
-
-    case 2:
-    stroke(69, 187, 255);
-    break;
-
-    case 3:
-    stroke(212, 0, 255);
-    break;
-  }
-
-  for(i=0; i<WORLD_SIZE/GRID_SIZE; i++){
-    line(-WORLD_SIZE/2+i*GRID_SIZE, -WORLD_SIZE/2,0.1,-WORLD_SIZE/2+i*GRID_SIZE, WORLD_SIZE/2,0.1);
-    line(-WORLD_SIZE/2,-WORLD_SIZE/2+i*GRID_SIZE, 0.1,WORLD_SIZE/2,-WORLD_SIZE/2+i*GRID_SIZE,0.1);
-  }
-
+// movement controls
+toggleon();
+movementcontrol();
+//robot movements
+user.movements();
 }
 
-
-function keyPressed() {
-  if (key == " ") {
-    if (jump_toggle == false) {
-      jump_toggle = true;
-      t0 = millis();
-    }
-  }
-
-  if (key == 'w') {
-    forward = true;
-  }
-  if (key == 's') {
-    back = true;
-  }
-  if (key == 'a') {
-    left = true;
-  }
-  if (key == 'd') {
-    right = true;
-  }
-
-
-  if (key == '1') {
-    if (firsttoggle == false) {
-      firsttoggle = true;
-      thirdtoggle = false;
-    } else {
-      firsttoggle = false;
-      thirdtoggle = false;
-    }
-  }
-  if (key == '3') {
-    if (thirdtoggle == false) {
-      thirdtoggle = true;
-      firsttoggle = false;
-    } else {
-      thirdtoggle = false;
-      firsttoggle = false;
-    }
-  }
-}
 
 function keyReleased() {
-  if (key == 'w') {
-    forward = false;
-  }
-  if (key == 's') {
-    back = false;
-  }
-  if (key == 'a') {
-    left = false;
-  }
-  if (key == 'd') {
-    right = false;
-  }
-}
+    switch (keyCode){
+      case LEFT_ARROW:
+        leftkey = 0;
+      break;
 
+      case RIGHT_ARROW:
+        rightkey = 0;
+      break;
 
-function handleUserInput() {
+      case UP_ARROW:
+        upkey = 0;
+      break;
 
-  let s = 1; // moving speed
-  let g = -0.01; //gravity
-  let v = 1; //initial speed
-  let t; //time passed
-
-  if (forward == true) {
-      cam_x1 += s * (cam_dx1);
-      cam_y1 += s * (cam_dy1);
-  }
-  if (back == true) {
-    cam_x1 -= s * (cam_dx1);
-    cam_y1 -= s * (cam_dy1);
-  }
-  if (left == true) {
-    cam_x1 += s * (cam_dy1);
-    cam_y1 -= s * (cam_dx1);
-  }
-  if (right == true) {
-    cam_x1 -= s * (cam_dy1);
-    cam_y1 += s * (cam_dx1);
-  }
-
-  if (jump_toggle == true) {
-    t = (millis() - t0) / 3;
-    cam_z1 = 30 + v * t + (1 / 2) * g * sq(t);
-
-    if (cam_z1 <= 30) {
-      cam_z1 = 30;
-      jump_toggle = false;
+      case DOWN_ARROW:
+        downkey = 0;
+      break;
     }
-  }
-  updateCamCenter();
+    switch(key){
+      case ' ':
+        spacekey = 0;
+      break;
+
+      case 'd':
+        dkey = 0;
+      break;
+
+      case 'f':
+        fkey = 0;
+      break;
+    }
 }
-
-function updateCamCenter() {
-  cam_dx1 = cos(pan)*cos(tilt);
-  cam_dy1 = sin(pan)*cos(tilt);
-  cam_dz1 = sin(tilt);
-
-  // compute scene center position
-  cam_cx1 = cam_x1 + cam_dx1;
-  cam_cy1 = cam_y1 + cam_dy1;
-  cam_cz1 = cam_z1 + cam_dz1;
+function windowResized(){
+  resizeCanvas(windowWidth, windowHeight, WEBGL);
 }

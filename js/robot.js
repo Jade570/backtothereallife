@@ -843,3 +843,60 @@ class Robot{
 
 
 }
+
+class Drone{
+  constructor(size, color, xaxis,yaxis, zaxis, xrot, yrot, zrot){
+    this.size = size;
+    this.color = color;
+    this.xaxis = xaxis;
+    this.yaxis = yaxis;
+    this.zaxis = zaxis;
+    this.xrot = xrot;
+    this.yrot = yrot;
+    this.zrot = zrot;
+
+    this.leftwing = 0;
+    this.rightwing = 0;
+  }
+
+  render(){
+    push();
+
+    colorMode(HSB);
+    fill(this.color);
+    translate(this.xaxis,this.yaxis,this.zaxis);
+    rotateX(this.xrot);
+    rotateY(this.yrot);
+    rotateZ(this.zrot);
+    noStroke();
+    sphere(40,12,12);
+
+    push();
+    translate(-75,0,0);
+    rotateX(HALF_PI+this.leftwing);
+    plane(50);
+    pop();
+
+    push();
+    translate(75,0,0);
+    rotateX(HALF_PI+this.rightwing);
+    plane(50);
+    pop();
+
+    push();
+    translate(0, -25, 0);
+    fill(0,0,0);
+    specularMaterial(0,0,0);
+    sphere(20,12,12);
+    pop();
+
+    push();
+    rotateZ(HALF_PI);
+    fill(0,0,50);
+    cylinder(1,150, 12,1);
+    pop();
+
+    pop();
+  }
+
+}

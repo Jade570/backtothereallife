@@ -5,8 +5,6 @@ let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
 let startbutton;
 
 
-
-
 function bgmusic(){
   //beat
   setInterval(function(){Pd.send('beat', [0]);}, 8000*0.5);
