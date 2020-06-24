@@ -4,58 +4,6 @@ let usercol;
 let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
 let startbutton;
 
-
-function bgmusic(){
-  //beat
-  setInterval(function(){Pd.send('beat', [0]);}, 8000*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [1]);}, 8000*0.5);
-  },1000*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [2]);}, 8000*0.5);
-  },2000*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [3]);}, 8000*0.5);
-  },3500*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [4]);}, 8000*0.5);
-  },4000*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [5]);}, 8000*0.5);
-  },5000*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [6]);}, 8000*0.5);
-  },6000*0.5);
-  setTimeout(function(){
-      setInterval(function(){Pd.send('beat', [7]);}, 8000*0.5);
-  },7000*0.5);
-
-  //chord
-  setInterval(function(){
-       Pd.send('d', [0]); chordtoggle = 0;
-     }, 8000*0.5);
-   setTimeout(function(){setInterval(function(){
-       Pd.send('d', [1]); chordtoggle = 1;
-     }, 8000*0.5);}, 2000*0.5);
-   setTimeout(function(){setInterval(function(){
-       Pd.send('d', [2]); chordtoggle = 2;
-     }, 8000*0.5);}, 4000*0.5);
-   setTimeout(function(){setInterval(function(){
-       Pd.send('d', [3]); chordtoggle = 3;
-     }, 8000*0.5);}, 6000*0.5);
-
-  //volume
-     setInterval(function(){
-       Pd.send('vol', [0]);
-     }, 1000*0.5);
-
-     setTimeout(function(){
-       setInterval(function(){
-         Pd.send('vol', [1]);
-       }, 1000*0.5);
-     }, 500*0.5);
-}
-
 function toggleon(){
   if (keyIsPressed){
     switch (keyCode){

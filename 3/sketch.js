@@ -197,6 +197,7 @@ function draw() {
   plane(10000);
   pop();
 
+  spotLight(0,100,100, -width/3, 100, -(height/2.5),0,1,0);
   user.render();
   bot.render();
   drone.render();

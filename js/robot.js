@@ -865,6 +865,9 @@ class Drone{
     colorMode(HSB);
     fill(this.color);
     translate(this.xaxis,this.yaxis,this.zaxis);
+
+
+
     rotateX(this.xrot);
     rotateY(this.yrot);
     rotateZ(this.zrot);
