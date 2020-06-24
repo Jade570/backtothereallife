@@ -30,31 +30,46 @@ class Robot{
     this.rightthigh=createVector(this.rtx,this.rty,this.rtz);
 
     //tokens
+    /*
+      from, to tokens:
+      from | to
+      0     0   : original position
+      0     1   : original -> target
+      1     0   : target -> original
+      1     1   : target position
+
+      x: forward/backward direction
+      y: side direction
+
+      usage:
+      x[from,to]
+      y[from,to]
+    */
+
     this.leftleg={
-      up: false,
-      down: false
+      x:{from:false, to:false},
+      state: "static"
     };
     this.rightleg={
-      up: false,
-      down: false
+      x:{from:false, to:false},
+      state: "static"
     };
     this.leftarm={
-      up:false,
-      down: false,
-      left: false,
-      right:false
+      x:{from:false, to:false},
+      y:{from:false, to:false},
+      yto:false,
+      state: "static"
     }
     this.rightarm={
-      up:false,
-      down: false,
-      left: false,
-      right:false
+      x:{from:false, to:false},
+      y:{from:false, to:false},
+      state: "static"
     }
   }
 
   //rendering part
   limb (position, limbtype) { //limbtype: arm, forearm, thigh, leg
-    push();
+    //push();
     switch(limbtype){
       case "arm":
         switch(position){
@@ -223,7 +238,6 @@ class Robot{
         pop();
       break;
     }
-    pop();
 }
   head(){
     push();
@@ -383,28 +397,28 @@ class Robot{
       push();
       translate(-95*this.size,0,0);
       this.limb("left", "arm");
-      translate(0,0,95*this.size);
+      translate(0,0,55*this.size);
       this.limb("left", "forearm");
       pop();
 
       push();
       translate(95*this.size,0,0);
       this.limb("right", "arm");
-      translate(0,0,95*this.size);
+      translate(0,0,55*this.size);
       this.limb("right", "forearm");
       pop();
 
       push();
       translate(-40*this.size,0,170*this.size);
       this.limb("left", "thigh");
-      translate(0,0,85*this.size);
+      translate(0,0,40*this.size);
       this.limb("left", "leg");
       pop();
 
       push();
       translate(40*this.size,0,170*this.size);
       this.limb("right", "thigh");
-      translate(0,0,85*this.size);
+      translate(0,0,40*this.size);
       this.limb("right", "leg");
       pop();
     pop();
@@ -427,28 +441,28 @@ class Robot{
         push();
         translate(-100*this.size,0,0);
         this.limb("left", "arm");
-        translate(0,0,95*this.size);
+        translate(0,0,55*this.size);
         this.limb("left", "forearm");
         pop();
 
         push();
         translate(100*this.size,0,0);
         this.limb("right", "arm");
-        translate(0,0,95*this.size);
+        translate(0,0,55*this.size);
         this.limb("right", "forearm");
         pop();
 
         push();
         translate(-40*this.size,0,170*this.size);
         this.limb("left", "thigh");
-        translate(0,0,85*this.size);
+        translate(0,0,40*this.size);
         this.limb("left", "leg");
         pop();
 
         push();
         translate(40*this.size,0,170*this.size);
         this.limb("right", "thigh");
-        translate(0,0,85*this.size);
+        translate(0,0,40*this.size);
         this.limb("right", "leg");
         pop();
       pop();
@@ -458,16 +472,286 @@ class Robot{
 
   //movement part
   leftarmleft(){ //stretch arm left
-
+    if (this.leftarm.state == "setleft"){ //check key input
+      this.leftarm.y.from = false;
+      this.leftarm.y.to = true;
+      this.lay-=radians(4);
+      this.lfax -= (HALF_PI/3)/42.5;
+      if(this.lay <= -radians(170)){ //stop movement
+        this.leftarm.state = "static"; // change state
+        this.leftarm.y.from = true;
+        this.leftarm.y.to = true;
+        this.lay = -radians(170);
+        this.lfax = 0;
+      }
+    }
   }
   leftarmright(){ //go back
-
+    if (this.leftarm.state == "resetleft"){ //check key input
+      this.leftarm.y.from = true;
+      this.leftarm.y.to = false;
+      this.lay+=radians(4);
+      this.lfax += (HALF_PI/3)/42.5;
+      if(this.lay >= 0){ //stop movement
+        this.leftarm.y.from = false;
+        this.leftarm.y.to = false;
+        this.leftarm.state = "static"; //change state
+        this.lay = 0;
+        this.lfax = HALF_PI/3;
+      }
+    }
   }
   rightarmright(){ //stretch arm right
-
+    if (this.rightarm.state == "setright"){ //check key input
+      this.rightarm.y.from = false;
+      this.rightarm.y.to = true;
+      this.ray+=radians(4);
+      this.rfax -= (HALF_PI/3)/42.5;
+      if(this.ray >= radians(170)){ //stop movement
+        this.rightarm.state = "static"; // change state
+        this.rightarm.y.from = true;
+        this.rightarm.y.to = true;
+        this.ray = radians(170);
+        this.rfax = 0;
+      }
+    }
   }
   rightarmleft(){ //go back
+    if (this.rightarm.state == "resetright"){ //check key input
+      this.rightarm.y.from = true;
+      this.rightarm.y.to = false;
+      this.ray-=radians(4);
+      this.rfax += (HALF_PI/3)/42.5;
+      if(this.ray <= 0){ //stop movement
+        this.rightarm.y.from = false;
+        this.rightarm.y.to = false;
+        this.rightarm.state = "static"; //change state
+        this.ray = 0;
+        this.rfax = HALF_PI/3;
+      }
+    }
+  }
+  hurrayup(){
+    if (this.leftarm.state == "sethurray" && this.rightarm.state=="sethurray"){
+      this.leftarm.x.from = false;
+      this.leftarm.x.to=true;
+      this.rightarm.x.from = false;
+      this.rightarm.x.to=true;
+      this.lax += radians(4);
+      this.rax += radians(4);
+      this.lfax -= (HALF_PI/3)/42.5;
+      this.rfax -= (HALF_PI/3)/42.5;
+      if(this.lax >= radians(170)){
+        this.leftarm.state="static";
+        this.rightarm.state="static";
+        this.leftarm.x.from = true;
+        this.leftarm.x.to = true;
+        this.rightarm.x.from = true;
+        this.rightarm.x.to = true;
+        this.lax = radians(170);
+        this.rax = radians(170);
+        this.lfax = 0;
+        this.rfax = 0;
+      }
+    }
+  }
+  hurraydown(){
+    if (this.leftarm.state == "resethurray" && this.rightarm.state=="resethurray"){
+      this.leftarm.x.from = true;
+      this.leftarm.x.to = false;
+      this.rightarm.x.from = true;
+      this.rightarm.x.to = false;
+      this.lax -= radians(4);
+      this.rax -= radians(4);
+      this.lfax += (HALF_PI/3)/42.5;
+      this.rfax += (HALF_PI/3)/42.5;
+      if(this.lax <= 0){
+        this.leftarm.state="static";
+        this.rightarm.state="static";
+        this.leftarm.x.from = false;
+        this.leftarm.x.to = false;
+        this.rightarm.x.from = false;
+        this.rightarm.x.to = false;
+        this.lax = 0;
+        this.rax = 0;
+        this.lfax = HALF_PI/3;
+        this.rfax = HALF_PI/3;
+      }
+    }
+  }
+  clapup(){
+    if (this.leftarm.state == "setclap" && this.rightarm.state=="setclap"){
+      this.leftarm.x.from = false;
+      this.leftarm.x.to=true;
+      this.rightarm.x.from = false;
+      this.rightarm.x.to=true;
+      this.lax += radians(2);
+      this.rax += radians(2);
+      this.lay += radians(0.25);
+      this.ray -= radians(0.25);
+      this.lfay += radians(1);
+      this.rfay -= radians(1);
+
+      if(this.lax >= radians(170/2)){
+        this.leftarm.state="static";
+        this.rightarm.state="static";
+        this.leftarm.x.from = true;
+        this.leftarm.x.to = true;
+        this.rightarm.x.from = true;
+        this.rightarm.x.to = true;
+        this.lax = radians(170/2);
+        this.rax = radians(170/2);
+      }
+    }
+  }
+  clapdown(){
+    if (this.leftarm.state == "resetclap" && this.rightarm.state=="resetclap"){
+      this.leftarm.x.from = true;
+      this.leftarm.x.to=false;
+      this.rightarm.x.from = true;
+      this.rightarm.x.to = false;
+      this.lax -= radians(2);
+      this.rax -= radians(2);
+      this.lay -= radians(0.25);
+      this.ray += radians(0.25);
+      this.lfay -= radians(1);
+      this.rfay += radians(1);
+
+      if(this.lax <= 0){
+        this.leftarm.state="static";
+        this.rightarm.state="static";
+        this.leftarm.x.from = false;
+        this.leftarm.x.to = false;
+        this.rightarm.x.from = false;
+        this.rightarm.x.to = false;
+        this.lax = 0;
+        this.rax = 0;
+      }
+    }
+  }
+  legsdown(){
+    if (this.leftleg.state == "setlegs" && this.rightleg.state == "setlegs"){
+      this.leftleg.x.from = false;
+      this.leftleg.x.to = true;
+      this.rightleg.x.from = false;
+      this.rightleg.x.to = true;
+      this.ltx += radians(1);
+      this.rtx += radians(1);
+      this.llx -= radians(1);
+      this.rlx -= radians(1);
+      this.zaxis += 0.5;
+      this.yaxis += 1;
+
+      if (this.ltx >= radians(170/4)){
+        this.leftleg.state = "static";
+        this.rightleg.state = "static";
+        this.leftleg.x.from=true;
+        this.leftleg.x.to = true;
+        this.rightleg.x.from=true;
+        this.rightleg.x.to = true;
+        this.ltx = radians(170/4);
+        this.rtx = radians(170/4);
+      }
+    }
+  }
+  legsup(){
+    if (this.leftleg.state == "resetlegs" && this.rightleg.state == "resetlegs"){
+      this.leftleg.x.from = true;
+      this.leftleg.x.to = false;
+      this.rightleg.x.from = true;
+      this.rightleg.x.to = false;
+      this.ltx -= radians(1);
+      this.rtx -= radians(1);
+      this.llx += radians(1);
+      this.rlx += radians(1);
+      this.zaxis -= 0.5;
+      this.yaxis -= 1;
+
+      if (this.ltx <= 0){
+        this.leftleg.state = "static";
+        this.rightleg.state = "static";
+        this.leftleg.x.from=false;
+        this.leftleg.x.to = false;
+        this.rightleg.x.from=false;
+        this.rightleg.x.to = false;
+        this.ltx = 0;
+        this.rtx = 0;
+      }
+    }
+  }
+  leftlegup(){
+    if (this.leftleg.state == "setleft"){
+      this.leftleg.x.from = false;
+      this.leftleg.x.to = true;
+      this.ltx += radians(4/2.5);
+      this.llx -= radians(1);
+      if (this.ltx >= radians(170/2.5)){
+        this.leftleg.state = "static";
+        this.leftleg.x.from = true;
+        this.leftleg.x.to = true;
+        this.ltx = radians(170/2.5);
+      }
+    }
+  }
+  leftlegdown(){
+    if (this.leftleg.state == "resetleft"){
+      this.leftleg.x.from = true;
+      this.leftleg.x.to = false;
+      this.ltx -= radians(4/2.5);
+      this.llx += radians(1);
+      if (this.ltx <= 0){
+        this.leftleg.state = "static";
+        this.leftleg.x.from = false;
+        this.leftleg.x.to = false;
+        this.ltx =0;
+      }
+    }
+  }
+  rightlegup(){
+    if (this.rightleg.state == "setright"){
+      this.rightleg.x.from = false;
+      this.rightleg.x.to = true;
+      this.rtx += radians(4/2.5);
+      this.rlx -= radians(1);
+      if (this.rtx >= radians(170/2.5)){
+        this.rightleg.state = "static";
+        this.rightleg.x.from = true;
+        this.rightleg.x.to = true;
+        this.rtx = radians(170/2.5);
+      }
+    }
 
   }
+  rightlegdown(){
+    if (this.rightleg.state == "resetright"){
+      this.rightleg.x.from = true;
+      this.rightleg.x.to = false;
+      this.rtx -= radians(4/2.5);
+      this.rlx += radians(1);
+      if (this.rtx <= 0){
+        this.rightleg.state = "static";
+        this.rightleg.x.from = false;
+        this.rightleg.x.to = false;
+        this.rtx =0;
+      }
+    }
+  }
+  movements(){
+    user.leftarmleft();
+    user.leftarmright();
+    user.rightarmright();
+    user.rightarmleft();
+    user.hurrayup();
+    user.hurraydown();
+    user.clapup();
+    user.clapdown();
+    user.legsdown();
+    user.legsup();
+    user.leftlegup();
+    user.leftlegdown();
+    user.rightlegup();
+    user.rightlegdown();
+  }
+
 
 }
