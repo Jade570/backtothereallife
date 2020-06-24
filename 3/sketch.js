@@ -3,6 +3,7 @@ let user, bot, drone;
 let usercol, botcol, dronecol;
 let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
 let nextbutton, replaybutton;
+let skybox, wallfront, wallside;
 
 function toggleon(){
   if (keyIsPressed){
@@ -135,20 +136,29 @@ function movementcontrol(){
   }
 }
 function preload(){
+  skybox = loadShader('../js/skybox.vert', '../js/skybox.frag');
   snare = loadSound("../assets/snare.wav");
   kick = loadSound("../assets/kick.wav");
+  wall = loadImage("../assets/wall.jpg");
+  wallside = loadImage("../assets/wallside.jpg");
 }
 
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
+
+
+  noStroke();
+  textureMode(NORMAL);
+  setupCubeMap();
+
   colorMode(HSB, 360, 100, 100);
 
   usercol = color(0,100,100);
   botcol = color(10,100,70);
   dronecol = color(146,77,29);
 
-  user = new Robot(0.5,0,usercol,100,0,0,0,0,0);
-  bot = new Robot(0.5,1,botcol,-100,0,0,0,0,0);
+  user = new Robot(0.5,0,usercol,windowWidth/5,0,0,0,0,0);
+  bot = new Robot(0.5,1,botcol,-windowWidth/5,0,0,0,0,0);
   drone = new Drone(0.5, dronecol, -width/3, 100, -(height/2.5), -radians(60),0,radians(30));
   leftkey = 0;
   rightkey = 0;
@@ -180,21 +190,32 @@ function setup() {
 function draw() {
   orbitControl();
 
+
   rotateX(HALF_PI);
   rotateZ(-PI);
   rotateY(PI);
 
+  background(0);
+  renderSkybox();
+
+
   colorMode(RGB, 255,255,255);
   lights();
 
-  background(0);
+
+
 
   colorMode(HSB, 360, 100, 100);
 
+
   push();
-  translate(0,0,250);
+  translate(0,0,130);
   noStroke();
-  plane(10000);
+  fill(0,0,15);
+  box(10000, 500, 10);
+
+  translate(0,0,50);
+  box(10000, 500, 10);
   pop();
 
   spotLight(0,100,100, -width/3, 100, -(height/2.5),0,1,0);
@@ -244,6 +265,7 @@ function keyReleased() {
       break;
     }
 }
+
 function windowResized(){
   resizeCanvas(windowWidth, windowHeight, WEBGL);
 }

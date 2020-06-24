@@ -7,9 +7,9 @@ function setupCubeMap() {
   gl1.texParameteri(gl1.TEXTURE_CUBE_MAP, gl1.TEXTURE_MIN_FILTER, gl1.LINEAR);
 
   gl1.texImage2D(gl1.TEXTURE_CUBE_MAP_POSITIVE_X, 0, gl1.RGBA, gl1.RGBA,
-    gl1.UNSIGNED_BYTE, wall.canvas);
+    gl1.UNSIGNED_BYTE, wallside.canvas);
   gl1.texImage2D(gl1.TEXTURE_CUBE_MAP_NEGATIVE_X, 0, gl1.RGBA, gl1.RGBA,
-    gl1.UNSIGNED_BYTE, wall.canvas);
+    gl1.UNSIGNED_BYTE, wallside.canvas);
   gl1.texImage2D(gl1.TEXTURE_CUBE_MAP_POSITIVE_Y, 0, gl1.RGBA, gl1.RGBA,
     gl1.UNSIGNED_BYTE, wall.canvas);
   gl1.texImage2D(gl1.TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, gl1.RGBA, gl1.RGBA,
@@ -20,12 +20,12 @@ function setupCubeMap() {
     gl1.UNSIGNED_BYTE, wall.canvas);
 }
 
-function renderSkyBox() {
+function renderSkybox() {
   //tex = gl.createTexture();
-  shader(skyboxShader);
+  shader(skybox);
   // set uniform variable for cubemap texture
-  gl1.useProgram(skyboxShader._glProgram);
-  texLoc = gl1.getUniformLocation(skyboxShader._glProgram, "cubeMap");
+  gl1.useProgram(skybox._glProgram);
+  texLoc = gl1.getUniformLocation(skybox._glProgram, "cubeMap");
   gl1.uniform1i(texLoc, 0);
 
   gl1.depthFunc(gl1.LEQUAL);

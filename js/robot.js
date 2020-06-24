@@ -857,6 +857,8 @@ class Drone{
 
     this.leftwing = 0;
     this.rightwing = 0;
+    this.wingtoggle = false;
+    this.wingtoggle = true;
   }
 
   render(){
@@ -866,6 +868,24 @@ class Drone{
     fill(this.color);
     translate(this.xaxis,this.yaxis,this.zaxis);
 
+    if (this.wingtoggle == false){
+      this.leftwing += 0.2;
+      this.rightwing -= 0.2;
+      this.zaxis += 1;
+      this.xrot += radians(0.2);
+      if (this.leftwing>=10){
+        this.wingtoggle = true;
+      }
+    }
+    else if (this.wingtoggle == true){
+      this.leftwing -= 0.2;
+      this.rightwing += 0.2;
+      this.zaxis -= 1;
+      this.xrot -= radians(0.2);
+      if (this.leftwing<=0){
+        this.wingtoggle = false;
+      }
+    }
 
 
     rotateX(this.xrot);
@@ -876,13 +896,13 @@ class Drone{
 
     push();
     translate(-75,0,0);
-    rotateX(HALF_PI+this.leftwing);
+    rotateX(HALF_PI+radians(this.leftwing));
     plane(50);
     pop();
 
     push();
     translate(75,0,0);
-    rotateX(HALF_PI+this.rightwing);
+    rotateX(HALF_PI+radians(this.rightwing));
     plane(50);
     pop();
 
