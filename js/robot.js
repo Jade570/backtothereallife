@@ -69,6 +69,8 @@ class Robot{
     this.lu = 0;
     this.rlu = 0;
     this.rld = 0;
+
+    this.eyehue = (hue(this.color)-132+360)%360;
   }
 
   //rendering part
@@ -265,7 +267,7 @@ class Robot{
         push();
         translate(0,-45*this.size,8*this.size);
         fill(0,0,0);
-        specularMaterial(246,94,10,0.9);
+        specularMaterial((hue(this.color)-132+360)%360,94,10,0.9);
         sphere(this.size*30,10,10);
         pop();
       break;
@@ -282,8 +284,8 @@ class Robot{
         //eyes
         push();
         translate(0,-45*this.size,8*this.size);
-        specularMaterial((hue(this.color)-132+360)%360, 100,100,0.9);
-        fill((hue(this.color)-132+360)%360, 90,100, 0.9);
+        specularMaterial(this.eyehue, 100,100,0.9);
+        fill(this.eyehue, 90,100, 0.9);
         sphere(this.size*30,10,10);
         pop();
       break;
@@ -341,8 +343,8 @@ class Robot{
           colorMode(HSB);
           //specularMaterial((hue(this.color)-132+360)%360, saturation(this.color), brightness(this.color),0.9);
           //fill((hue(this.color)-132+360)%360, saturation(this.color), brightness(this.color), 0.9);
-          specularMaterial((hue(this.color)-132+360)%360, 100,100,0.9);
-          fill((hue(this.color)-132+360)%360, 90,100, 0.9);
+          specularMaterial(this.eyehue, 100,100,0.9);
+          fill(this.eyehue, 90,100, 0.9);
           push();
           translate(-27*this.size,0,0);
           sphere(15*this.size,12,12);

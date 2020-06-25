@@ -298,21 +298,23 @@ function preload(){
 }
 
 function chapterscene(){
+  textAlign(CENTER);
   push();
   rotateX(HALF_PI);
-  translate(-windowWidth/2+10,-windowHeight/3,0);
+  translate(0,-windowHeight/3,100);
   fill(255);
   textFont(titlefont);
-  textSize(0.1*windowWidth);
+  textSize(50);
   text('Chapter 1', 0, 0);
 
-  translate(30, 0.09*windowWidth,0);
-  textSize(0.06*windowWidth);
+  translate(30, 25,0);
+  textSize(25);
   text('On the Conveyor belt', 0, 0);
 
   textFont(font);
-  translate(30, 0.11*windowWidth,0);
-  textSize(0.04*windowWidth);
+  translate(-120, 45 ,0);
+  textSize(16);
+  textAlign(LEFT);
   text("My spy robot has first visited\n to the conveyor belt.\nLooks like this is a belt for\n checking the poor robot.. \nMaybe we should follow \nwhat the other robot does.", 0, 0);
   pop();
 }
@@ -320,10 +322,9 @@ function retryscene(){
   lightbrightness = 50;
   push();
   rotateX(HALF_PI);
-  translate(-windowWidth/2+10,-windowHeight/3,0);
+  translate(0,-windowHeight/3,100);
   textFont(font);
-  translate(30, 0.11*windowWidth,0);
-  textSize(0.04*windowWidth);
+  textSize(25);
   text("Oops, we have been discovered. \n The future for our humanity \n has just been vanished..", 0, 0);
   pop();
   replaybutton.show();
@@ -332,10 +333,9 @@ function nextscene(){
   lightbrightness = 50;
   push();
   rotateX(HALF_PI);
-  translate(-windowWidth/2+10,-windowHeight/3,0);
+  translate(0,-windowHeight/3,100);
   textFont(font);
-  translate(30, 0.11*windowWidth,0);
-  textSize(0.04*windowWidth);
+  textSize(25);
   text("We just passed \n the first room of the fortress! \n Let's move on.", 0, 0);
   pop();
   nextbutton.show();
