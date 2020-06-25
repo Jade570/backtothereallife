@@ -858,7 +858,10 @@ class Drone{
     this.leftwing = 0;
     this.rightwing = 0;
     this.wingtoggle = false;
-    this.wingtoggle = true;
+
+    this.beam = 0;
+    this.beamstart = false;
+    this.beamend = false;
   }
 
   render(){
@@ -867,6 +870,25 @@ class Drone{
     colorMode(HSB);
     fill(this.color);
     translate(this.xaxis,this.yaxis,this.zaxis);
+    rotateX(this.xrot);
+    rotateY(this.yrot);
+    rotateZ(this.zrot);
+
+    if (this.beamstart == true){
+      this.beam += 20;
+      if (this.beam> 800){
+        this.beamtoggle = true;
+        this.beamstart = false;
+      }
+    }
+    else if (this.beamend == true){
+      this.beam -= 20;
+      if (this.beam < 0){
+        this.beamtoggle = false;
+        this.beamend = false;
+      }
+    }
+
 
     if (this.wingtoggle == false){
       this.leftwing += 0.2;
@@ -887,30 +909,34 @@ class Drone{
       }
     }
 
-
-    rotateX(this.xrot);
-    rotateY(this.yrot);
-    rotateZ(this.zrot);
     noStroke();
     sphere(40,12,12);
 
     push();
-    translate(-75,0,0);
+    translate(-90,0,0);
     rotateX(HALF_PI+radians(this.leftwing));
-    plane(50);
+    fill(0,0,20);
+    plane(80,130);
     pop();
 
     push();
-    translate(75,0,0);
+    translate(90,0,0);
     rotateX(HALF_PI+radians(this.rightwing));
-    plane(50);
+    fill(0,0,20);
+    plane (80,130);
     pop();
 
-    push();
+    push(); //lens
     translate(0, -25, 0);
     fill(0,0,0);
     specularMaterial(0,0,0);
     sphere(20,12,12);
+
+    //beam
+    translate(0, -this.beam/2, 0);
+    fill(0,0,0,0.1);
+    cone(this.beam/7,this.beam,12,1);
+
     pop();
 
     push();
