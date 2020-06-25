@@ -1,5 +1,5 @@
 let crash, openhh, hihat, snare, kick;
-let user, bot=[], drone;
+let user, bot;
 let usercol, botcol, dronecol;
 let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
 let nextbutton, replaybutton;
@@ -702,17 +702,17 @@ function chapterscene(){
   fill(255);
   textFont(titlefont);
   textSize(50);
-  text('Chapter 2', 0, 0);
+  text('Chapter 3', 0, 0);
 
   translate(30, 25,0);
   textSize(25);
-  text('What are they doing?', 0, 0);
+  text('What Robots Wanted', 0, 0);
 
   textFont(font);
   translate(-120, 45 ,0);
   textSize(16);
   textAlign(LEFT);
-  text("The second place is\njust a simple room.\nThe robots are making\nstrange movements,\nbut it looks like\nthere are rules.\nLet's decode it and make sure\n we are not detected.", 0, 0);
+  text("Seems like this is the last room.\nThere, the robot that\n we have never seen is coming.\n Looks like it is the boss. \n Let's defeat it and \nsave the humanity!", 0, 0);
   pop();
 }
 function retryscene(){
@@ -722,7 +722,7 @@ function retryscene(){
   translate(0,-windowHeight/3,100);
   textFont(font);
   textSize(25);
-  text("Oops, we have been discovered. \n The future for our humanity \n has just been vanished..", 0, 0);
+  text("Hmmm.... Retry?", 0, 0);
   pop();
   replaybutton.show();
 }
@@ -733,7 +733,7 @@ function nextscene(){
   translate(0,-windowHeight/3,100);
   textFont(font);
   textSize(25);
-  text("Seriously, what were they doing?\n Hmmph, whatever. \n Let's keep moving on.", 0, 0);
+  text("Did not expect this kind of ending.\nWhatever. Good ending though.\nSaved the humanity, \nand also knew robots' desire\nand helped them.", 0, 0);
   pop();
   nextbutton.show();
 }
@@ -746,15 +746,11 @@ function setup() {
   setupCubeMap();
 
   colorMode(HSB, 360, 100, 100);
-
   usercol = color(0,100,100);
   botcol = color(10,100,70);
 
-  user = new Robot(0.7,0,usercol,windowWidth/2-50,300,0,0,0,-radians(30));
-  bot[0] = new Robot(0.7, 1, botcol, -windowWidth/2+50, 300,0,0,0,radians(30));
-  bot[1] = new Robot(0.7, 1, botcol, -100, 300,0,0,0,radians(15));
-  bot[2] = new Robot(0.7, 1, botcol, 100, 300,0,0,0,-radians(15));
-
+  user = new Robot(0.7,0,usercol,windowWidth/2-50,300,0,0,0,0);
+  bot = new Robot(0.7, 2, botcol, -windowWidth/2+50, 300,0,0,0,0);
 
   leftkey = 0;
   rightkey = 0;
@@ -764,17 +760,17 @@ function setup() {
   dkey = 0;
   fkey = 0;
 
-  replaybutton = createButton('replay');
+  replaybutton = createButton('retry');
   replaybutton.position(windowWidth/2-75, windowHeight-200);
   replaybutton.mousePressed(function(){
-    window.location.replace("../4/index.html");
+    window.location.replace("../5/index.html");
   });
   replaybutton.hide();
 
-  nextbutton = createButton('next');
+  nextbutton = createButton('replay');
   nextbutton.position(windowWidth/2-75, windowHeight-200);
   nextbutton.mousePressed(function(){
-    window.location.replace("../5/index.html");
+    window.location.replace("../index.html");
   });
   nextbutton.hide();
 

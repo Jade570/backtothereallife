@@ -370,7 +370,7 @@ function setup() {
   dkey = 0;
   fkey = 0;
 
-  replaybutton = createButton('replay');
+  replaybutton = createButton('retry');
   replaybutton.position(windowWidth/2-75, windowHeight-200);
   replaybutton.mousePressed(function(){
     window.location.replace("../3/index.html");
