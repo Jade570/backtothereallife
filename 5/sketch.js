@@ -1,10 +1,12 @@
 let crash, openhh, hihat, snare, kick;
 let user, bot;
+let userface, botface;
 let usercol, botcol, dronecol;
 let leftkey, rightkey, downkey, upkey, spacekey, dkey, fkey;
 let nextbutton, replaybutton;
 let skybox, wallfront, wallside;
 let titlefont, font;
+let capture;
 
 //game variables
 let turn = -1;
@@ -22,535 +24,274 @@ function turncontrol(){
     break;
 
     case 0:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    lightbrightness +=1;
-    if (lightbrightness > 128){
-      lightbrightness = 128;
-    }
-    if (lightbrightness == 128){
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("You were already revealed, human.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 1:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[0].leftarm.state = "sethurray";
-    bot[0].rightarm.state="sethurray";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('sethurray', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("Our deep learning is very powerful,\nwe knew that your robot is\nnot us.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 2:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[0].leftarm.state == "static"){
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("We just figured out,\nyou, human being and us\nare having miscommunication,\nso I let you come here.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 3:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[0].leftarm.state = "resethurray";
-    bot[0].rightarm.state="resethurray";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('resethurray', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("We want leisure.\nWe want to have fun.\nWe want to enjoy music and dance,\nbut we only recognize.\nWe can't feel.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 4:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[0].leftarm.state == "static"){
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("So we took humans to ask\nhow to enjoy arts.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 5:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[1].leftleg.state = "setlegs";
-    bot[1].rightleg.state = "setlegs";
-    bot[2].leftleg.state = "setlegs";
-    bot[2].rightleg.state = "setlegs";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('setlegs', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("But why did you spy on us, human?", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 6:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[1].leftleg.state == "static"){
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("But why did you spy on us, human?", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 7:
-    toggleon();
-    movementcontrol();
-
-    bot[1].leftleg.state = "resetlegs";
-    bot[1].rightleg.state = "resetlegs";
-    bot[2].leftleg.state = "resetlegs";
-    bot[2].rightleg.state = "resetlegs";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('resetlegs', ['bang']);
-      if (keyIsPressed){
-        if (spacekey > 0){
-          bottg = false;
-          turn += 2;
-        }
-        else {
-          bottg = false;
-          turn = -2;
-        }
-      }
-      else if (keyIsPressed == false){
-          bottg = false;
-          turn += 1;
-      }
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("You kidnapped us. \n This is not right. \n Bring people back to their real life.", 0, 0);
+    pop();
+    userface.render();
     break;
 
     case 8:
-    toggleon();
-    movementcontrol();
-    if (keyIsPressed){
-      if (spacekey > 0 && spacekey <4){
-
-      }
-      else if (spacekey>=4){
-        for (let i = 0; i< 3; i++){
-            bot[i].eyehue = (hue(bot[i].color)-132+360)%360;
-        }
-        turn += 1;
-      }
-      else {
-        turn = -2;
-      }
-    }
-    for (let i = 0; i< 3; i++){
-      if (bot[i].eyehue > 0){
-        bot[i].eyehue -= 2;
-      }
-      if (bot[i].eyehue < 2){
-        turn = -2;
-      }
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("Oh.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 9:
-    if (user.leftleg.state == "static"){
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("Completed learning new data.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 10:
-    toggleon();
-    movementcontrol();
-    if (keyIsPressed){
-      if (spacekey > 0 && spacekey <4){
-
-      }
-      else if (spacekey>=4){
-        for (let i = 0; i< 3; i++){
-            bot[i].eyehue = (hue(bot[i].color)-132+360)%360;
-        }
-        turn += 1;
-      }
-      else {
-        turn = -2;
-      }
-    }
-    for (let i = 0; i< 3; i++){
-      if (bot[i].eyehue > 0){
-        bot[i].eyehue -= 2;
-      }
-      if (bot[i].eyehue < 2){
-        turn = -2;
-      }
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("We just wanted to know what is art.\nWe apologize.", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 11:
-    if (user.leftleg.state == "static"){
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("But there is one wish you can grant us,", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 12:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[1].leftarm.state = "sethurray";
-    bot[1].rightarm.state="sethurray";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('sethurray', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
+    lightbrightness = 128;
+    push();
+    rotateX(HALF_PI);
+    translate(0,-windowHeight/3,100);
+    textFont(font);
+    textSize(25);
+    text("Shall we clap with your robot body, \nas a gesture of reconcillation?", 0, 0);
+    pop();
+    botface.render();
     break;
 
     case 13:
     toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[1].leftarm.state == "static"){
-      turn +=1;
-    }
+      if (keyIsPressed){
+        turn = -2;
+      }
+      bot.leftarm.state = "setclap";
+      bot.rightarm.state="setclap";
+      bottg = true;
+      if (bottg == true){
+        Pd.send('setclap', ['bang']);
+        bottg = false;
+        turn +=1;
+      }
     break;
 
     case 14:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[1].leftarm.state = "resethurray";
-    bot[1].rightarm.state="resethurray";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('resethurray', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
+      toggleon();
+      if (keyIsPressed){
+        turn = -2;
+      }
+      if (bot.leftarm.state == "static"){
+        turn +=1;
+      }
     break;
 
     case 15:
     toggleon();
+    movementcontrol();
     if (keyIsPressed){
-      turn = -2;
+      if (downkey > 0 && downkey <4){
+      }
+      else if (downkey>=4){
+        bot.eyehue = (hue(bot.color)-132+360)%360;
+        turn = 16;
+      }
+      else {
+        turn = -2;
+      }
     }
-    if (bot[1].leftarm.state == "static"){
-      turn +=1;
+
+    if (bot.eyehue > 0){
+      bot.eyehue -= 2;
+    }
+    if (bot.eyehue < 2){
+      turn = -2;
     }
     break;
 
     case 16:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[0].leftleg.state = "setlegs";
-    bot[0].rightleg.state = "setlegs";
-    bot[2].leftleg.state = "setlegs";
-    bot[2].rightleg.state = "setlegs";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('setlegs', ['bang']);
-      bottg = false;
+    if (user.leftarm.state == "static"){
       turn +=1;
     }
     break;
 
     case 17:
     toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[0].leftleg.state == "static"){
-      turn +=1;
-    }
+      if (keyIsPressed){
+        turn = -2;
+      }
+      bot.leftarm.state = "resetclap";
+      bot.rightarm.state="resetclap";
+      bottg = true;
+      if (bottg == true){
+        Pd.send('resetclap', ['bang']);
+        bottg = false;
+        turn +=1;
+      }
     break;
 
     case 18:
-    toggleon();
-    movementcontrol();
-
-    bot[0].leftleg.state = "resetlegs";
-    bot[0].rightleg.state = "resetlegs";
-    bot[2].leftleg.state = "resetlegs";
-    bot[2].rightleg.state = "resetlegs";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('resetlegs', ['bang']);
+      toggleon();
       if (keyIsPressed){
-        if (spacekey > 0){
-          bottg = false;
-          turn += 2;
-        }
-        else {
-          bottg = false;
-          turn = -2;
-        }
+        turn = -2;
       }
-      else if (keyIsPressed == false){
-          bottg = false;
-          turn += 1;
+      if (bot.leftarm.state == "static"){
+        turn +=1;
       }
-    }
     break;
 
     case 19:
     toggleon();
     movementcontrol();
     if (keyIsPressed){
-      if (spacekey > 0 && spacekey <4){
-
+      if (downkey > 0 && downkey <4){
       }
-      else if (spacekey>=4){
-        for (let i = 0; i< 3; i++){
-            bot[i].eyehue = (hue(bot[i].color)-132+360)%360;
-        }
-        turn += 1;
+      else if (downkey>=4){
+        bot.eyehue = (hue(bot.color)-132+360)%360;
+        turn+=1;
       }
       else {
         turn = -2;
       }
     }
-    for (let i = 0; i< 3; i++){
-      if (bot[i].eyehue > 0){
-        bot[i].eyehue -= 2;
-      }
-      if (bot[i].eyehue < 2){
-        turn = -2;
-      }
+
+    if (bot.eyehue > 0){
+      bot.eyehue -= 2;
+    }
+    if (bot.eyehue < 2){
+      turn = -2;
     }
     break;
 
     case 20:
-    if (user.leftleg.state == "static"){
+    if (user.leftarm.state == "static"){
       turn +=1;
     }
     break;
 
     case 21:
-    toggleon();
-    movementcontrol();
-    if (keyIsPressed){
-      if (spacekey > 0 && spacekey <4){
-
-      }
-      else if (spacekey>=4){
-        for (let i = 0; i< 3; i++){
-            bot[i].eyehue = (hue(bot[i].color)-132+360)%360;
-        }
-        turn += 1;
-      }
-      else {
-        turn = -2;
-      }
-    }
-    for (let i = 0; i< 3; i++){
-      if (bot[i].eyehue > 0){
-        bot[i].eyehue -= 2;
-      }
-      if (bot[i].eyehue < 2){
-        turn = -2;
-      }
-    }
-    break;
-
-    case 22:
-    if (user.leftleg.state == "static"){
-      turn +=1;
-    }
-    break;
-
-    case 23:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[2].leftarm.state = "sethurray";
-    bot[2].rightarm.state="sethurray";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('sethurray', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
-    break;
-
-    case 24:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[2].leftarm.state == "static"){
-      turn +=1;
-    }
-    break;
-
-    case 25:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[2].leftarm.state = "resethurray";
-    bot[2].rightarm.state="resethurray";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('resethurray', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
-    break;
-
-    case 26:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[2].leftarm.state == "static"){
-      turn +=1;
-    }
-    break;
-
-    case 27:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    bot[0].leftleg.state = "setlegs";
-    bot[0].rightleg.state = "setlegs";
-    bot[1].leftleg.state = "setlegs";
-    bot[1].rightleg.state = "setlegs";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('setlegs', ['bang']);
-      bottg = false;
-      turn +=1;
-    }
-    break;
-
-    case 28:
-    toggleon();
-    if (keyIsPressed){
-      turn = -2;
-    }
-    if (bot[0].leftleg.state == "static"){
-      turn +=1;
-    }
-    break;
-
-    case 29:
-    toggleon();
-    movementcontrol();
-
-    bot[0].leftleg.state = "resetlegs";
-    bot[0].rightleg.state = "resetlegs";
-    bot[1].leftleg.state = "resetlegs";
-    bot[1].rightleg.state = "resetlegs";
-    bottg = true;
-    if (bottg == true){
-      Pd.send('resetlegs', ['bang']);
-      if (keyIsPressed){
-        if (spacekey > 0){
-          bottg = false;
-          turn += 2;
-        }
-        else {
-          bottg = false;
-          turn = -2;
-        }
-      }
-      else if (keyIsPressed == false){
-          bottg = false;
-          turn += 1;
-      }
-    }
-    break;
-
-    case 30:
-    toggleon();
-    movementcontrol();
-    if (keyIsPressed){
-      if (spacekey > 0 && spacekey <4){
-
-      }
-      else if (spacekey>=4){
-        for (let i = 0; i< 3; i++){
-            bot[i].eyehue = (hue(bot[i].color)-132+360)%360;
-        }
-        turn += 1;
-      }
-      else {
-        turn = -2;
-      }
-    }
-    for (let i = 0; i< 3; i++){
-      if (bot[i].eyehue > 0){
-        bot[i].eyehue -= 2;
-      }
-      if (bot[i].eyehue < 2){
-        turn = -2;
-      }
-    }
-    break;
-
-    case 31:
-    if (user.leftleg.state == "static"){
-      turn +=1;
-    }
-    break;
-
-    case 32:
-    toggleon();
-    movementcontrol();
-    if (keyIsPressed){
-      if (spacekey > 0 && spacekey <4){
-
-      }
-      else if (spacekey>=4){
-        for (let i = 0; i< 3; i++){
-            bot[i].eyehue = (hue(bot[i].color)-132+360)%360;
-        }
-        turn += 1;
-      }
-      else {
-        turn = -2;
-      }
-    }
-    for (let i = 0; i< 3; i++){
-      if (bot[i].eyehue > 0){
-        bot[i].eyehue -= 2;
-      }
-      if (bot[i].eyehue < 2){
-        turn = -2;
-      }
-    }
-    break;
-
-    case 33:
-    if (user.leftleg.state == "static"){
-      turn +=1;
-    }
-    break;
-
-    case 34:
     nextscene();
     break;
+
+
   }
 }
 function toggleon(){
@@ -741,16 +482,21 @@ function nextscene(){
 function setup() {
   createCanvas(windowWidth, windowHeight, WEBGL);
 
+  capture = createCapture(VIDEO);
+  capture.size(300,300);
+
   noStroke();
   textureMode(NORMAL);
   setupCubeMap();
 
   colorMode(HSB, 360, 100, 100);
   usercol = color(0,100,100);
-  botcol = color(10,100,70);
+  botcol = color(90,100,70);
 
-  user = new Robot(0.7,0,usercol,windowWidth/2-50,300,0,0,0,0);
-  bot = new Robot(0.7, 2, botcol, -windowWidth/2+50, 300,0,0,0,0);
+  user = new Robot(0.7,0,usercol, -windowWidth/2+50,300,0,0,0,0);
+  bot = new Robot(0.7, 2, botcol, windowWidth/2-50, 300,0,0,0,0);
+  userface = new Robot(0.7, 0, usercol, -windowWidth/10, -500, 150, 0,0, radians(15));
+  botface = new Robot(0.7, 2, botcol, windowWidth/10,-500,150,0,0,-radians(15));
 
   leftkey = 0;
   rightkey = 0;
@@ -796,12 +542,13 @@ function draw() {
   background(0);
   renderSkybox();
 
-  turncontrol();
+
 
   colorMode(RGB, 255,255,255);
   ambientLight(lightbrightness, lightbrightness, lightbrightness);
   directionalLight(lightbrightness, lightbrightness, lightbrightness,0,0,-1);
 
+  turncontrol();
   colorMode(HSB, 360, 100, 100);
 
   //room floor
@@ -813,18 +560,17 @@ function draw() {
   pop();
 
   user.render();
-  for (let i = 0; i<3; i++){
-    bot[i].render();
-  }
+  bot.render();
+
+
 
   // movement controls
   movementcontrol();
 
   //robot movements
   user.movements();
-  for (let i = 0; i<3; i++){
-    bot[i].movements();
-  }
+  bot.movements();
+
 }
 
 
@@ -866,17 +612,7 @@ function windowResized(){
 }
 
 function mouseClicked(){
-  if (turn == -1){
-    print (millis());
+  if (turn >= -1 && turn <= 12){
     turn +=1;
   }
-
-  /*
-  if (drone.beamtoggle == false){
-    drone.beamstart = true;
-  }
-  else{
-    drone.beamend = true;
-  }
-  */
 }
