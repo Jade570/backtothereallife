@@ -149,6 +149,9 @@ function turncontrol(){
     }
   }
   if (turn == 10){
+    user.xaxis -= 5;
+    bot.xaxis -= 5;
+    drone.xaxis += 5;
     nextscene();
   }
 }
