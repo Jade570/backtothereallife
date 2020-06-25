@@ -152,6 +152,7 @@ function turncontrol(){
     user.xaxis -= 5;
     bot.xaxis -= 5;
     drone.xaxis += 5;
+    drone.beamend = true;
     nextscene();
   }
 }
